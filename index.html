@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Gift Effects (High Contrast)</title>
+<style>
+  :root{
+    /* ===== Tunables (you can change via URL, see script at bottom) ===== */
+    --panel-width: 820;        /* px, max width of the card                        */
+    --scale: 1;                /* overall UI scale (e.g., 1.2 = 120%)              */
+    --bg-alpha: 0.96;          /* panel opacity (0.0–1.0)                           */
+    --row-alpha: 0.16;         /* row background opacity                            */
+
+    /* ===== Theme ===== */
+    --bg: rgba(8,10,12,var(--bg-alpha));
+    --card: rgba(18,20,24,1);
+    --ring: rgba(255,255,255,.18);
+    --text: #fafafa;
+    --muted:#c7c7ce;
+
+    --e:#ffffff;   /* E = white */
+    --d:#22c55e;   /* D = green */
+    --c:#fbbf24;   /* C = gold  */
+    --b:#f59e0b;   /* B = amber */
+    --s:#c084fc;   /* S = purple*/
+
+    --shadow-strong: 0 18px 70px rgba(0,0,0,.55);
+    --text-glow: 0 1px 2px rgba(0,0,0,.85), 0 0 10px rgba(0,0,0,.45);
+    --text-stroke: 0.6px rgba(0,0,0,.65);
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:transparent}
+  body{
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+    color:var(--text);
+  }
+
+  /* Position top-center with safe margins; scale entire widget for readability */
+  .stage{
+    position:fixed; inset:auto 0 0 0;
+    display:flex; justify-content:center; align-items:flex-start;
+    pointer-events:none;              /* overlay won't eat clicks */
+    transform: scale(var(--scale));
+    transform-origin: top center;
+    padding-top: 14px;
+  }
+
+  .wrap{
+    width:min(94vw, calc(var(--panel-width) * 1px));
+    background:var(--bg);
+    border:1.5px solid var(--ring);
+    border-radius:20px;
+    box-shadow: var(--shadow-strong);
+    overflow:hidden;
+    pointer-events:auto;              /* allow selecting text if needed */
+  }
+
+  .head{
+    display:flex; align-items:center; gap:12px;
+    padding:14px 18px 12px;
+    background:var(--card);
+    border-bottom:1px solid var(--ring);
+  }
+  .dot{
+    width:12px;height:12px;border-radius:50%;
+    background:var(--c);
+    box-shadow:0 0 18px 2px rgba(251,191,36,.7);
+  }
+  .title{
+    font-weight:900; letter-spacing:.3px; font-size:22px;
+    text-shadow: var(--text-glow);
+    -webkit-text-stroke: var(--text-stroke);
+  }
+  .subtitle{
+    margin-left:auto; font-size:14px; color:var(--muted);
+    text-shadow: var(--text-glow);
+    -webkit-text-stroke: 0.3px rgba(0,0,0,.5);
+  }
+
+  .list{display:grid; gap:10px; padding:12px 16px 16px}
+
+  .row{
+    display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center;
+    background:rgba(255,255,255,var(--row-alpha));
+    border:1px solid var(--ring);
+    border-radius:14px; padding:10px 12px;
+    backdrop-filter: blur(1px);
+  }
+
+  .pill{
+    min-width:46px; height:28px; border-radius:999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-weight:1000; font-size:14px; letter-spacing:.8px;
+    border:1px solid var(--ring);
+    text-shadow: var(--text-glow);
+    -webkit-text-stroke: var(--text-stroke);
+  }
+  .pill.e{ color:var(--e); background:rgba(255,255,255,.12) }
+  .pill.d{ color:var(--d); background:rgba(34,197,94,.22) }
+  .pill.c{ color:var(--c); background:rgba(251,191,36,.22) }
+  .pill.b{ color:var(--b); background:rgba(245,158,11,.22) }
+  .pill.s{ color:var(--s); background:rgba(192,132,252,.26) }
+
+  .txt{
+    font-size:16px; line-height:1.35; font-weight:700;
+    text-shadow: var(--text-glow);
+    -webkit-text-stroke: var(--text-stroke);
+  }
+  .muted{color:var(--muted)}
+  .em{font-weight:900}
+
+  .coins{
+    font-size:15px; font-weight:800; color:#111;
+    background:#ffd86b;               /* brighter tag */
+    border:2px solid rgba(0,0,0,.25);
+    border-radius:10px;
+    padding:6px 10px; display:inline-flex; gap:8px; align-items:center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 6px 18px rgba(0,0,0,.35);
+  }
+  .coins .coin{filter:drop-shadow(0 0 6px rgba(0,0,0,.35)); font-size:16px}
+  .coins .hint{font-size:13px; opacity:.9}
+
+  .foot{
+    padding: 2px 16px 14px; font-size:13px; color:var(--muted); text-align:right;
+    text-shadow: var(--text-glow);
+    -webkit-text-stroke: 0.3px rgba(0,0,0,.5);
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="wrap" role="region" aria-label="Gift Effects High Contrast Panel">
+      <div class="head">
+        <div class="dot" aria-hidden="true"></div>
+        <div class="title">Gift Effects</div>
+        <div class="subtitle">1 gift → 1 spawn/wave</div>
+      </div>
+
+      <div class="list">
+        <!-- S -->
+        <div class="row">
+          <div class="pill s">S</div>
+          <div class="txt">Bosses: Wither / Warden / Ravager (<span class="muted">Regen I</span>). If I’m in water → Elder Guardian (<span class="muted">Regen I</span>), else Mutant Enderman. Frost Giant ×2 (<span class="muted">Regen I</span>).</div>
+          <div class="coins"><span class="coin">🪙</span>200+ <span class="hint">coins</span></div>
+        </div>
+
+        <!-- B -->
+        <div class="row">
+          <div class="pill b">B</div>
+          <div class="txt">Waves: Ancient Skeleton ×3, Dark Sorcerer ×3, Remnant ×3, Frost Giant ×1 (<span class="muted">Regen I</span>).</div>
+          <div class="coins"><span class="coin">🪙</span>75 <span class="hint">coins</span></div>
+        </div>
+
+        <!-- C -->
+        <div class="row">
+          <div class="pill c">C</div>
+          <div class="txt">Hostiles in <span class="em">Diamond Prot III + Projectile Prot III</span> + Diamond Axe (one per gift).</div>
+          <div class="coins"><span class="coin">🪙</span>25 <span class="hint">coins</span></div>
+        </div>
+
+        <!-- D -->
+        <div class="row">
+          <div class="pill d">D</div>
+          <div class="txt">Hostiles with <span class="em">Iron Armor</span> + <span class="em">Diamond Axe</span> (one per gift).</div>
+          <div class="coins"><span class="coin">🪙</span>10 <span class="hint">coins • 10× Rose</span></div>
+        </div>
+
+        <!-- E -->
+        <div class="row">
+          <div class="pill e">E</div>
+          <div class="txt">Vanilla hostiles (one per gift). Also triggers on <span class="em">Follow</span>.</div>
+          <div class="coins"><span class="coin">🪙</span>1+ <span class="hint">coin • or Follow</span></div>
+        </div>
+      </div>
+
+      <div class="foot">High-contrast overlay • tune with ?scale=1.2&opacity=1&w=900</div>
+    </div>
+  </div>
+
+<script>
+/* Allow quick tuning via URL:
+   ?scale=1.2   (overall size)
+   &opacity=1   (panel opacity 0..1)
+   &w=900       (panel width in px)
+   &row=0.22    (row background opacity)
+*/
+(function(){
+  const params = new URLSearchParams(location.search);
+  const sc = parseFloat(params.get('scale'));
+  const op = parseFloat(params.get('opacity'));
+  const w  = parseInt(params.get('w'),10);
+  const ro = parseFloat(params.get('row'));
+  if(!isNaN(sc) && sc>0) document.documentElement.style.setProperty('--scale', sc);
+  if(!isNaN(op) && op>=0 && op<=1) document.documentElement.style.setProperty('--bg-alpha', op);
+  if(!isNaN(w) && w>320) document.documentElement.style.setProperty('--panel-width', w);
+  if(!isNaN(ro) && ro>=0 && ro<=1) document.documentElement.style.setProperty('--row-alpha', ro);
+})();
+</script>
+</body>
+</html>
